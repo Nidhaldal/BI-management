@@ -1,0 +1,76 @@
+.filters-selection {
+    background-color: #1a1a1a; /* Dark background for the futuristic look */
+    padding: 20px;
+    border-radius: 15px;
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    width: 300px; /* Adjust based on your layout */
+    margin: 0 auto;
+  }
+  
+  .filters-selection h2 {
+    color: #ffffff;
+    font-family: 'Roboto', sans-serif;
+    font-size: 24px;
+    margin-bottom: 20px;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+  }
+  
+  .filter-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 15px; /* Spacing between buttons */
+  }
+  
+  .futuristic-button {
+    background-color: #212121; /* Button background */
+    color: #ffffff; /* Text color */
+    border: 1px solid #4e4e4e; /* Border color for buttons */
+    padding: 12px 20px;
+    border-radius: 30px; /* Rounded corners */
+    font-size: 18px;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease; /* Smooth transition for hover effect */
+    position: relative;
+    overflow: hidden; /* Hide overflow for the pseudo-element effect */
+  }
+  
+  .futuristic-button::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(120deg, rgba(255, 255, 255, 0.2), transparent);
+    transition: all 0.3s ease;
+    transform: translateX(-100%);
+  }
+  
+  .futuristic-button:hover::before {
+    transform: translateX(100%);
+  }
+  
+  .futuristic-button:hover {
+    color: #00d9ff; /* Hover text color */
+    background-color: #333333; /* Hover background */
+  }
+  
+  .futuristic-button span {
+    position: relative;
+    z-index: 2;
+  }
+  
+  .futuristic-button:focus {
+    outline: none; /* Remove default focus outline */
+    box-shadow: 0 0 10px #00d9ff; /* Custom focus shadow */
+  }
+  
+  .futuristic-button:active {
+    transform: scale(0.98); /* Slight scale down on click for effect */
+  }
+  

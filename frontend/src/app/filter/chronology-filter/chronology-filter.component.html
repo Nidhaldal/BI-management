@@ -1,0 +1,34 @@
+<div class="chronology-filter-container">
+  <!-- Year Selector -->
+  <div class="year-selector">
+    <label for="yearSelect">Select Year:</label>
+    <select id="yearSelect" (change)="onYearChange($event)">
+      <option *ngFor="let year of availableYears" [value]="year">
+        {{ year }}
+      </option>
+    </select>
+  </div>
+
+  <!-- Start Month Selector -->
+  <div class="month-selector">
+    <label for="startMonthRange">Start Month:</label>
+    <input type="range" id="startMonthRange" min="1" max="12" [(ngModel)]="startMonth" (change)="onStartMonthChange($event)" class="range-input">
+    <p>{{ months[startMonth - 1].label }}</p>
+  </div>
+
+  <!-- End Month Selector -->
+  <div class="month-selector">
+    <label for="endMonthRange">End Month:</label>
+    <input type="range" id="endMonthRange" min="1" max="12" [(ngModel)]="endMonth" (change)="onEndMonthChange($event)" class="range-input">
+    <p>{{ months[endMonth - 1].label }}</p>
+  </div>
+
+  <!-- Date Range Display -->
+  <div class="date-range-display">
+    <p>Selected Date Range: {{ startDate }} to {{ endDate }}</p>
+  </div>
+
+  <!-- Apply Filter Button -->
+  <button (click)="applyFilter()">Apply Filter</button>
+
+  

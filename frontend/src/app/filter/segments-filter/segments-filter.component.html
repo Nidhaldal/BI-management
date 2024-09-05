@@ -1,0 +1,19 @@
+<div class="filter-container">
+    <mat-form-field appearance="fill" class="file-select">
+      <mat-label>Select File</mat-label>
+      <mat-select (selectionChange)="fetchSegmentColumns()" [(value)]="selectedFileId">
+        <mat-option *ngFor="let file of fileOptions" [value]="file.id">
+          {{ file.name }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+  
+    <div class="filter-options">
+        <mat-checkbox *ngFor="let column of availableSegmentColumns" 
+                      [value]="column" 
+                      (change)="onColumnSelectionChange($event)">
+          {{ column }}
+        </mat-checkbox>
+      </div>
+      
+  

@@ -1,0 +1,77 @@
+<!-- Add Sidebar Button -->
+<button class="add-sidebar-btn" (click)="toggleSidebar()">Add Sidebar</button>
+
+<!-- Main Buttons Container -->
+<div *ngIf="showSidebar" class="centered-buttons-container">
+  <button class="sidebar-button" (click)="onDataClick()">Data</button>
+  <button class="sidebar-button" (click)="onGraphClick()">Graph</button>
+  <button class="sidebar-button" (click)="onFiltersClick()">Filters</button>
+</div>
+
+<!-- File Selection Section -->
+<div *ngIf="showCodeSection" class="file-selection">
+  <label for="file-select">Select File:</label>
+  <select id="file-select" [(ngModel)]="selectedFileId" (change)="onFileSelected($event)">
+    <option *ngFor="let file of fileOptions" [value]="file.id">{{ file.name }}</option>
+  </select>
+</div>
+
+<!-- Code Input Section -->
+<div *ngIf="showCodeSection" class="code-section">
+  <textarea class="code-textarea" [(ngModel)]="code" rows="10" cols="50" placeholder="Enter Python code here..."></textarea>
+  <button class="compile-button" (click)="onCompile()">Compile</button>
+</div>
+
+<!-- Display Generated Graphs Section -->
+<div *ngIf="showGraphSection" class="graph-container">
+  <div *ngFor="let graph of graphs" class="graph-item">
+    <div class="graph-box">
+      <img [src]="graph" alt="Generated Graph" class="graph-image" />
+    </div>
+  </div>
+  <button class="validate-button" (click)="onValidate()">Validate</button>
+</div>
+
+<!-- Unique Values Panel for Segments -->
+<div
+  *ngFor="let segment of selectedSegments; let i = index"
+  class="unique-values-panel resizable draggable"
+  cdkDrag
+  [ngStyle]="{'width.px': width, 'height.px': height}"
+  (cdkDragEnded)="onDragEnd($event)"
+  (mousedown)="onResizeStart($event)"
+>
+  <div class="draggable-header">
+    <button (click)="onSegmentDeselected(segment.column)">Close</button>
+    <button class="sort-button" (click)="toggleSort(i)">Sort</button>
+  </div>
+  <div class="unique-values-body">
+    <h3>Unique Values for: {{ segment.column }}</h3>
+    <div class="unique-values-list">
+      <button 
+        *ngFor="let value of getSortedUniqueValues(segment, i)"
+        (click)="onUniqueValueClicked(segment.column, value, $event)"
+        [ngClass]="{'selected': segment.uniqueValues.includes(value)}"
+        class="unique-value-button"
+      >
+        {{ value }}
+        <!-- Display a checkmark if the value is selected -->
+        <span *ngIf="segment.uniqueValues.includes(value)">✔</span>
+      </button>
+    </div>
+  </div>
+  <div class="resize-handle"></div>
+</div>
+
+<!-- Filters Section -->
+<div *ngIf="filtersVisible" class="filters-section">
+  <button class="filters-btn" (click)="openSegmentsFilterPopup()">Segments Filter</button>
+  <button class="filters-btn" (click)="openChronologyFilterPopup(this.selectedFile)">Chronology Filter</button>
+</div>
+
+<!-- File Upload Component -->
+<app-file-upload></app-file-upload>
+
+<!-- Filters Selection Component -->
+<!-- Filters Section in Parent Component HTML -->
+<app-filters-selection *ngIf="filtersVisible" [selectedFile]="selectedFile"></app-filters-selection>

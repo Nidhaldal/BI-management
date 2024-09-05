@@ -1,0 +1,65 @@
+.chronology-filter-container {
+  padding: 1.5rem;
+  border-radius: 8px;
+  background: linear-gradient(135deg, #e3f2fd, #bbdefb);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  transition: box-shadow 0.3s ease, transform 0.3s ease;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.chronology-filter-container:hover {
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+  transform: scale(1.03);
+}
+
+.year-selector, .month-selector, .date-range-display {
+  margin-bottom: 1.5rem;
+}
+
+mat-slider {
+  width: 100%;
+}
+
+mat-slider .mat-slider-track {
+  background: #007bff;
+}
+
+mat-slider .mat-slider-thumb {
+  background: #007bff;
+  border: 2px solid #0056b3;
+}
+
+#yearSelect, #startMonthSelect, #endMonthSelect {
+  padding: 0.75rem;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  background: #fff;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+  font-size: 1rem;
+}
+
+#yearSelect:focus, #startMonthSelect:focus, #endMonthSelect:focus {
+  border-color: #007bff;
+  box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.2);
+  outline: none;
+}
+
+.date-range-display p {
+  font-size: 1.1rem;
+  font-weight: 500;
+  color: #333;
+}
+
+label {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 0.5rem;
+  display: block;
+}
+
+p {
+  margin: 0;
+  font-size: 1rem;
+  color: #555;
+}

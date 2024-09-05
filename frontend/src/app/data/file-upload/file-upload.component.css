@@ -1,0 +1,108 @@
+/* Modal Background */
+.modal {
+    display: block; /* Make sure the modal is displayed as a block element */
+    position: fixed; /* Fixed position to stay in the center of the viewport */
+    z-index: 1000; /* Ensure the modal is above other elements */
+    left: 0;
+    top: 0;
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    overflow: auto; /* Enable scrolling if needed */
+    background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent black background */
+  }
+  
+  /* Modal Content */
+  .modal-content {
+    background-color: #ffffff; /* White background */
+    margin: 5% auto; /* 5% top/bottom margin and center horizontally */
+    padding: 20px; /* Padding around the content */
+    border-radius: 12px; /* Rounded corners for a modern look */
+    width: 50%; /* Width of the modal */
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2); /* Subtle shadow for depth */
+    animation-name: animatetop;
+    animation-duration: 0.4s; /* Animation for a smooth entrance */
+  }
+  
+  /* Close Button */
+  .close {
+    color: #333; /* Dark gray for contrast */
+    float: right; /* Align to the right */
+    font-size: 24px; /* Smaller size for a sleek look */
+    font-weight: bold; /* Bold font */
+    cursor: pointer; /* Pointer cursor on hover */
+    transition: color 0.2s; /* Smooth color transition */
+  }
+  
+  .close:hover,
+  .close:focus {
+    color: #ff4c4c; /* Bright red on hover for visibility */
+    text-decoration: none; /* No underline */
+  }
+  
+  /* Buttons Styling */
+  button {
+    background-color: #007bff; /* Blue background for primary actions */
+    color: white; /* White text */
+    border: none; /* Remove default border */
+    padding: 10px 15px; /* Padding for size */
+    margin: 10px 5px; /* Spacing between buttons */
+    border-radius: 5px; /* Rounded corners for consistency */
+    cursor: pointer; /* Pointer cursor on hover */
+    font-size: 16px; /* Readable font size */
+    transition: background-color 0.3s; /* Smooth background color transition */
+  }
+  
+  button:hover {
+    background-color: #0056b3; /* Darker blue on hover */
+  }
+  
+  /* Styling for the "X" remove button */
+  .remove-button {
+    background: none; /* Transparent background */
+    border: none; /* No border */
+    color: #ff4c4c; /* Bright red for the "X" icon */
+    font-size: 20px; /* Large size for visibility */
+    cursor: pointer; /* Pointer cursor on hover */
+    padding: 0; /* Remove padding */
+    transition: color 0.3s; /* Smooth color transition */
+  }
+  
+  .remove-button:hover {
+    color: darkred; /* Darker red on hover */
+  }
+  
+  /* Table Styling */
+  table {
+    width: 100%; /* Full width */
+    margin-top: 15px; /* Space above the table */
+    border-collapse: collapse; /* Collapsed borders for a clean look */
+  }
+  
+  th, td {
+    padding: 10px; /* Padding for spacing */
+    text-align: left; /* Left-align text */
+    border-bottom: 1px solid #ddd; /* Light gray border below */
+  }
+  
+  th {
+    background-color: #f4f4f4; /* Light gray background for the header */
+    font-weight: bold; /* Bold text for headers */
+  }
+  
+  /* Table Rows */
+  tr:hover {
+    background-color: #f1f1f1; /* Light gray background on hover */
+  }
+  
+  /* Animation for Popup Entrance */
+  @keyframes animatetop {
+    from {
+      top: -300px;
+      opacity: 0;
+    } /* Start from off-screen and transparent */
+    to {
+      top: 0;
+      opacity: 1;
+    } /* End fully visible */
+  }
+  

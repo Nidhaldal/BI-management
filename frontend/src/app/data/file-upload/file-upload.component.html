@@ -1,0 +1,46 @@
+<!-- Choose Import Option Modal -->
+<div class="modal" *ngIf="showChoosePopup">
+    <div class="modal-content">
+      <span class="close" (click)="closePopup()">&times;</span>
+      <h3>Select Import Option</h3>
+      <button (click)="onUploadExcel()">Import Excel</button>
+      <button (click)="onImportFromDatabase()">Import from Database</button>
+    </div>
+  </div>
+  
+  <!-- File Upload Modal -->
+  <div class="modal" *ngIf="showFileUpload">
+    <div class="modal-content">
+      <span class="close" (click)="closePopup()">&times;</span>
+      <!-- Invisible File Input -->
+      <input type="file" id="file-input" multiple (change)="handleFileInput($event)" style="display: none;"/>
+  
+      <!-- Plus Sign Button -->
+      <button (click)="triggerFileInput()">+</button>
+  
+      <!-- File List Table -->
+      <table *ngIf="selectedFiles.length > 0">
+        <thead>
+          <tr>
+            <th>File Name</th>
+            <th>Size (KB)</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let file of selectedFiles; let i = index">
+            <td>{{ file.name }}</td>
+            <td>{{ (file.size / 1024).toFixed(2) }}</td>
+            <button class="remove-button" (click)="removeFile(i)">&#x2716;</button> <!-- "X" sign -->
+          </tr>
+        </tbody>
+      </table>
+  
+      <!-- Reset Button -->
+      <button (click)="reset()">Reset</button>
+  
+      <!-- Validate Button -->
+      <button (click)="onValidate()">Validate</button>
+    </div>
+  </div>
+  
