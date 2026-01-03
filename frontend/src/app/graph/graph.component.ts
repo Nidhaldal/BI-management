@@ -438,25 +438,21 @@ onDragEnd(event: any): void {
         return;
     }
 
-    // Ensure fileIds is an array even if selectedFileId is null
     const fileIds = this.selectedFileId ? [this.selectedFileId] : [];
 
-    // Call the applyFilters method of the graph service
     this.graphService.applyFilters(this.selectedFile, this.code, {
         ...filterParams,
         file_ids: fileIds,
     }).subscribe(
         response => {
             if (response && response.graphs && response.graphs.length > 0) {
-                // Map each graph's base64 string to an image source
                 this.graphs = response.graphs.map((graph: any) => 
                     'data:image/png;base64,' + graph.image
                 );
 
                 this.showGraphSection = true;
-                this.noDataMessage = ''; // Clear the no data message
+                this.noDataMessage = ''; 
             } else {
-                // Clear graphs if no graph data is available
                 this.graphs = [];
                 this.showGraphSection = false;
                 this.noDataMessage = 'No graph data available for the selected criteria.';
@@ -464,7 +460,6 @@ onDragEnd(event: any): void {
         },
         (error: HttpErrorResponse) => {
             console.error('Error applying filters:', error);
-            // Clear graphs on error and display an error message
             this.graphs = [];
             this.showGraphSection = false;
             this.noDataMessage = 'An error occurred while fetching graph data.';
@@ -473,36 +468,28 @@ onDragEnd(event: any): void {
 }
 
 onUniqueValueClicked(column: string, value: any, event: MouseEvent): void {
-  // Find the segment by column name
   const segment = this.selectedSegments.find(seg => seg.column === column);
 
   if (segment) {
     const isCtrlPressed = event.ctrlKey;
     const isShiftPressed = event.shiftKey;
 
-    // Initialize the uniqueValues list if it doesn't exist
     if (!segment.uniqueValues) {
       segment.uniqueValues = [];
     }
 
     if (isCtrlPressed || isShiftPressed) {
-      // Handle multi-selection with Ctrl or Shift
       if (segment.uniqueValues.includes(value)) {
-        // Remove the value if it is already selected
         segment.uniqueValues = segment.uniqueValues.filter(v => v !== value);
       } else {
-        // Add the value if it is not already selected
         segment.uniqueValues.push(value);
       }
     } else {
-      // Single selection mode: set the clicked value as the only selection
       segment.uniqueValues = [value];
     }
 
-    // Log the updated segment unique values
     console.log(`Segment '${column}' unique values after click:`, segment.uniqueValues);
 
-    // Call the method to apply filters with updated selections
     this.onUniqueValueSelected(column, segment.uniqueValues);
   }
 }
@@ -510,7 +497,6 @@ onUniqueValueClicked(column: string, value: any, event: MouseEvent): void {
 
 onUniqueValueSelected(column: string, selectedValues: any[]): void {
   if (this.selectedFile && this.code) {
-    // Construct filter parameters with all segments' selected values
     const filters = this.selectedSegments.reduce((acc, segment) => {
       if (segment.uniqueValues.length > 0) {
         acc[segment.column] = segment.uniqueValues;
@@ -527,7 +513,7 @@ onUniqueValueSelected(column: string, selectedValues: any[]): void {
     this.applyFilters(filterParams);
   } else {
     console.error('Missing required parameters.');
-    this.graphs = []; // Clear previous data
+    this.graphs = []; 
     this.showGraphSection = false;
     this.noDataMessage = 'Please select a file and enter code to compile.';
   }

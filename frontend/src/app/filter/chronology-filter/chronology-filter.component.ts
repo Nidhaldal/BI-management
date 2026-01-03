@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { GraphService } from '../../graph.service';
 import { PopupService } from '../../popup.service';
-import { GraphDataService } from '../../graph-data.service'; // Import the shared service
+import { GraphDataService } from '../../graph-data.service'; 
 
 
 @Component({
@@ -25,17 +25,17 @@ export class ChronologyFilterComponent implements OnInit {
     { label: 'November', value: 11 },
     { label: 'December', value: 12 }
   ];
-  startMonth: number = 1; // Default to January
-  endMonth: number = 12; // Default to December
+  startMonth: number = 1; 
+  endMonth: number = 12; 
   startDate: string = '';
   endDate: string = '';
   selectedYear: number | null = null;
-  selectedGraphId: number | null = null; // Store the ID of the selected graph
-  graphs: string[] = []; // Array to hold base64-encoded graph images
-  showGraphSection: boolean = false; // Flag to show/hide the graph section
+  selectedGraphId: number | null = null; 
+  graphs: string[] = []; 
+  showGraphSection: boolean = false; 
   noDataMessage: string = '';
 
-  constructor(private graphService: GraphService, private popupService: PopupService,private graphDataService: GraphDataService // Inject the shared service
+  constructor(private graphService: GraphService, private popupService: PopupService,private graphDataService: GraphDataService 
   ) {}
 
   ngOnInit(): void {
@@ -66,8 +66,8 @@ export class ChronologyFilterComponent implements OnInit {
   updateDateRange(): void {
     if (this.selectedYear !== null) {
       this.startDate = `${this.selectedYear}-${this.startMonth.toString().padStart(2, '0')}-01`;
-      const endMonth = this.endMonth === 12 ? this.endMonth : this.endMonth + 1; // End month is the next month
-      this.endDate = `${this.selectedYear}-${endMonth.toString().padStart(2, '0')}-01`; // End date is the first day of the next month
+      const endMonth = this.endMonth === 12 ? this.endMonth : this.endMonth + 1; 
+      this.endDate = `${this.selectedYear}-${endMonth.toString().padStart(2, '0')}-01`; 
     }
   }
 
@@ -82,12 +82,9 @@ export class ChronologyFilterComponent implements OnInit {
   
       this.graphService.filterGraphByChronology(filterParams).subscribe(
         data => {
-          // Log the entire data object to see its structure
           console.log('Filtered data:', data);
   
-          // Check if the data contains graphs
           if (data?.graphs) {
-            // Map the graphs to base64 data
             const graphs = data.graphs.map((graph: any) =>
               'data:image/png;base64,' + graph.image_base64
             );
@@ -95,7 +92,6 @@ export class ChronologyFilterComponent implements OnInit {
             console.log('Graphs with base64:', graphs);
   
             if (graphs.length > 0) {
-              // Update shared service with the base64 graph data
               this.graphDataService.updateGraphs(graphs);
   
               this.showGraphSection = true;
@@ -124,7 +120,6 @@ export class ChronologyFilterComponent implements OnInit {
   }
   
   
-  // Method to handle graph selection if needed
   onGraphSelect(event: any): void {
     this.selectedGraphId = +event.target.value;
   }

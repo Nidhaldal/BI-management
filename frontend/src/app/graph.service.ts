@@ -41,10 +41,9 @@ export class GraphService {
 
   applyFilters(file: File, code: string, filterParams: any): Observable<any> {
     const formData = new FormData();
-    formData.append('file', file); // Append the file directly
-    formData.append('code', code); // Append the code directly
+    formData.append('file', file); 
+    formData.append('code', code); 
     
-    // Convert filterParams fields to JSON string if needed
     formData.append('file_ids', JSON.stringify(filterParams.file_ids || []));
     formData.append('column', filterParams.column || '');
     formData.append('filters', JSON.stringify(filterParams.filters || {}));
@@ -62,7 +61,6 @@ export class GraphService {
   filterGraphByChronology(filterParams: FilterParams): Observable<any> {
     const formData = new FormData();
     
-    // Add the filter parameters to FormData
     if (filterParams.years) {
       formData.append('years', JSON.stringify(filterParams.years));
     }

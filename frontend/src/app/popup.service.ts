@@ -54,7 +54,7 @@ export class PopupService {
   openChronologyFilter(file: File | null): void {
     this.dialog.open(ChronologyFilterComponent, {
       width: '600px',
-      data: { file: file } // Pass the file as data
+      data: { file: file } 
     });
   }
   

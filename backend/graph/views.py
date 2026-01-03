@@ -42,12 +42,10 @@ def upload_file(request):
                 return HttpResponseBadRequest("Unsupported file format")
 
             try:
-                # Save file to storage backend
                 file_name = default_storage.save(uploaded_file.name, uploaded_file)
                 file_url = default_storage.url(file_name)
                 
-                # Create CsvData object with the file object
-                csv_data = CsvData(file=uploaded_file)  # Use the uploaded_file directly
+                csv_data = CsvData(file=uploaded_file)  
                 csv_data.save()
 
                 file_urls.append(file_url)
@@ -68,10 +66,8 @@ def upload_file(request):
 @csrf_exempt 
 def available_files(request):
     try:
-        # Fetch all CsvData objects
         files = CsvData.objects.all()
 
-        # Create a list of file objects with their ID and name
         file_list = [{'id': file.id, 'name': file.file.name} for file in files]
 
         return JsonResponse({'files': file_list})
@@ -131,7 +127,6 @@ def execute_code(request):
             if not file_id or not code:
                 return HttpResponseBadRequest("Missing file ID or code")
 
-            # Retrieve the file from storage
             csv_data = get_object_or_404(CsvData, id=file_id)
             file_name = csv_data.file.name
             file_path = default_storage.path(file_name)
@@ -141,7 +136,6 @@ def execute_code(request):
                     with open(file_path, 'wb') as dst_file:
                         dst_file.write(src_file.read())
 
-            # Load the data
             if file_name.lower().endswith('.csv'):
                 df = pd.read_csv(file_path)
             elif file_name.lower().endswith(('.xls', '.xlsx')):
@@ -151,7 +145,6 @@ def execute_code(request):
 
             df.columns = df.columns.str.strip()
 
-            # Execute the provided code
             exec_globals = {'pd': pd, 'plt': plt, 'io': io, 'base64': base64, 'df': df}
             exec_locals = {}
             try:
@@ -161,7 +154,6 @@ def execute_code(request):
                 if not image_base64:
                     return JsonResponse({'error': 'No image_base64 returned from code execution'}, status=400)
 
-                # Save graph code and image to the database
                 graph = Graph.objects.create(
                     csv_data=csv_data,
                     code=code,
@@ -215,7 +207,6 @@ def filter_graph(request):
                     with open(file_path, 'wb') as dst_file:
                         dst_file.write(src_file.read())
 
-            # Load the file into a DataFrame
             if file_name.lower().endswith('.csv'):
                 df = pd.read_csv(file_path)
             elif file_name.lower().endswith(('.xls', '.xlsx')):
@@ -233,7 +224,6 @@ def filter_graph(request):
             else:
                 return HttpResponseBadRequest(f"Column {column} not found in dataset")
 
-            # Retrieve all graph codes for the provided CSV data
             graphs = Graph.objects.filter(csv_data=csv_data).order_by('id')
             if not graphs:
                 return HttpResponseBadRequest("No graphs found for the provided CSV data")
@@ -247,7 +237,6 @@ def filter_graph(request):
                     exec_globals = {'pd': pd, 'plt': plt, 'io': io, 'base64': base64, 'df': filtered_df}
                     exec_locals = {}
 
-                    # Execute the code to generate the graph
                     exec(graph_code, exec_globals, exec_locals)
                     image_base64 = exec_locals.get('image_base64', '')
 
@@ -258,9 +247,9 @@ def filter_graph(request):
                     
                     results.append({
                         'image': image_base64,
-                        'url': f'/path/to/graphs/{graph.id}.png'  # Update with actual URL path if needed
+                        'url': f'/path/to/graphs/{graph.id}.png'  
                     })
-                    logger.info(f"Base64-encoded image: {image_base64}...")  # Log first 100 characters for brevity
+                    logger.info(f"Base64-encoded image: {image_base64}...")  
 
                 except Exception as e:
                     import traceback
@@ -269,10 +258,9 @@ def filter_graph(request):
             if results:
                 response_data = {
                     'graphs': results,
-                    'filtered_data': filtered_df.to_dict(orient='records')  # Include filtered data in the response
+                    'filtered_data': filtered_df.to_dict(orient='records')  
                 }
 
-                # Log filtered data and graph URLs
                 logger.info(f"Filtered data: {filtered_df.head().to_dict(orient='records')}")
                 logger.info(f"Generated graphs: {[result['url'] for result in results]}")
 
@@ -333,7 +321,7 @@ def get_available_segment_columns(request):
 def delete_files(request):
     if request.method == 'POST':
         try:
-            file_ids = request.POST.getlist('file_ids')  # List of file IDs to delete
+            file_ids = request.POST.getlist('file_ids')  
 
             if not file_ids:
                 return HttpResponseBadRequest("Missing file IDs")
@@ -342,9 +330,8 @@ def delete_files(request):
                 try:
                     csv_data = CsvData.objects.get(id=file_id)
                     file_path = csv_data.file.path
-                    csv_data.delete()  # Delete the record from the database
+                    csv_data.delete()  
 
-                    # Optionally delete the file from the filesystem
                     if os.path.exists(file_path):
                         os.remove(file_path)
                 except CsvData.DoesNotExist:
@@ -370,15 +357,15 @@ def get_unique_values(request):
                 return HttpResponseBadRequest("Missing file IDs or column")
 
             unique_values = set()
-            valid_file_ids = []  # To store file IDs that were successfully processed
+            valid_file_ids = []  
 
             for file_id in file_ids:
                 try:
                     csv_data = CsvData.objects.get(id=file_id)
                     file = csv_data.file
-                    valid_file_ids.append(int(file_id))  # Ensure file ID is an integer
+                    valid_file_ids.append(int(file_id))  
                 except CsvData.DoesNotExist:
-                    continue  # Skip this file and move to the next one
+                    continue  
 
                 file_path = default_storage.path(file.name)
                 if not os.path.exists(file_path):
@@ -386,13 +373,12 @@ def get_unique_values(request):
                         with open(file_path, 'wb') as dst_file:
                             dst_file.write(src_file.read())
 
-                # Read the file based on its extension
                 if file.name.lower().endswith('.csv'):
                     df = pd.read_csv(file_path)
                 elif file.name.lower().endswith(('.xls', '.xlsx')):
                     df = pd.read_excel(file_path, engine='openpyxl' if file.name.lower().endswith('.xlsx') else 'xlrd')
                 else:
-                    continue  # Skip unsupported file formats
+                    continue  
 
                 df.columns = df.columns.str.strip()
 
@@ -404,22 +390,19 @@ def get_unique_values(request):
                         elif isinstance(value, (np.float64, np.float32)):
                             unique_values.add(float(value))
                         elif isinstance(value, np.datetime64):
-                            # Format the datetime value to 'YYYY-MM-DD'
                             formatted_date = pd.to_datetime(value).strftime('%Y-%m-%d')
                             unique_values.add(formatted_date)
                         else:
                             unique_values.add(str(value))
                 else:
-                    continue  # Skip files where the column is not found
+                    continue  
 
-            # Convert the unique values set to a sorted list before returning
             sorted_unique_values = sorted(unique_values)
 
-            # Return both the list of unique values and the valid file IDs
             return JsonResponse({
                 'unique_values': sorted_unique_values,
-                'file_ids': valid_file_ids,  # Return the valid file IDs
-                'column': column  # Return the column that was processed
+                'file_ids': valid_file_ids,  
+                'column': column  
             })
 
         except Exception as e:
@@ -434,7 +417,6 @@ def get_available_years(request):
         try:
             years = set()
 
-            # Retrieve all files from the database
             csv_files = CsvData.objects.all()
 
             for csv_data in csv_files:
@@ -455,17 +437,13 @@ def get_available_years(request):
 
                 for column in df.columns:
                     try:
-                        # Convert column to datetime, if possible
                         df[column] = pd.to_datetime(df[column], format='%d/%m/%Y', errors='coerce')  # Specify the format
-                        # Extract years from non-null datetime values and add to the set
                         if df[column].dropna().dt.year.notnull().any():
                             years.update(df[column].dropna().dt.year.unique().astype(int))
                     except Exception as e:
-                        # Log exception if column cannot be converted to datetime
                         logger.warning(f"Column '{column}' could not be converted to datetime: {e}")
 
-            # Convert the set to a sorted list of integers
-            sorted_years = sorted(map(int, years))  # Ensure conversion to int
+            sorted_years = sorted(map(int, years)) 
 
             return JsonResponse({'years': sorted_years})
 
@@ -480,40 +458,32 @@ def get_available_years(request):
 def filter_graph_by_chronology(request):
     if request.method == 'POST':
         try:
-            # Debug: Log the start of the process
             logger.debug("Received POST request for filtering graphs by chronology.")
 
-            # Retrieve filter parameters
-            years = request.POST.getlist('years')  # List of years as strings
-            months = request.POST.getlist('months')  # List of months as strings
+            years = request.POST.getlist('years')  
+            months = request.POST.getlist('months')  
             start_month = request.POST.get('start_month')
             end_month = request.POST.get('end_month')
 
-            # Debug: Log the retrieved filter parameters
             logger.debug(f"Filter parameters received: years={years}, months={months}, start_month={start_month}, end_month={end_month}")
 
-            # Validate that at least one of the filter parameters is provided
             if not (years or months or (start_month and end_month)):
                 logger.error("Missing years, months, or date range.")
                 return HttpResponseBadRequest("Missing years, months, or date range")
 
-            # Convert filter parameters to appropriate types
             years = [int(year) for year in years if year.isdigit()]
             months = [int(month) for month in months if month.isdigit()]
             start_month = int(start_month) if start_month and start_month.isdigit() else None
             end_month = int(end_month) if end_month and end_month.isdigit() else None
 
-            # Debug: Log the converted filter parameters
             logger.debug(f"Converted filter parameters: years={years}, months={months}, start_month={start_month}, end_month={end_month}")
 
-            # Get all graphs
             graphs = Graph.objects.all()
             logger.debug(f"Total graphs retrieved: {graphs.count()}")
 
             file_ids = set(graph.csv_data.id for graph in graphs)
             logger.debug(f"Unique file IDs retrieved: {file_ids}")
 
-            # Collect dataframes for all files
             graph_results = []
             for file_id in file_ids:
                 try:
@@ -531,7 +501,6 @@ def filter_graph_by_chronology(request):
                             dst_file.write(src_file.read())
                     logger.debug(f"File copied to local storage: {file_path}")
 
-                # Load data from file
                 if file.name.lower().endswith('.csv'):
                     df = pd.read_csv(file_path)
                 elif file.name.lower().endswith(('.xls', '.xlsx')):
@@ -540,45 +509,38 @@ def filter_graph_by_chronology(request):
                     logger.warning(f"Unsupported file format for file: {file.name}")
                     continue
 
-                # Strip any whitespace from the column names
                 df.columns = [col.strip() for col in df.columns]
                 logger.debug(f"Data columns after stripping: {df.columns.tolist()}")
 
-                filtered_df = pd.DataFrame()  # Initialize empty DataFrame for filtering
+                filtered_df = pd.DataFrame()  
 
-                # Apply date filters
                 for column in df.columns:
                     logger.debug(f"Processing column: {column}")
                     if pd.api.types.is_datetime64_any_dtype(df[column]):
                         df[column] = pd.to_datetime(df[column], errors='coerce')
 
-                        # Filter by years
                         if years:
                             df = df[df[column].dt.year.isin(years)]
                             logger.debug(f"Data filtered by years: {years}")
 
-                        # Filter by months
                         if months:
                             df = df[df[column].dt.month.isin(months)]
                             logger.debug(f"Data filtered by months: {months}")
 
-                        # Filter by month range
                         if start_month is not None and end_month is not None:
                             df = df[(df[column].dt.month >= start_month) & (df[column].dt.month <= end_month)]
                             logger.debug(f"Data filtered by month range: {start_month} - {end_month}")
 
-                        filtered_df = df  # Save the filtered DataFrame
+                        filtered_df = df  
                         logger.debug(f"Filtered DataFrame shape: {filtered_df.shape}")
 
                         if not filtered_df.empty:
-                            break  # Exit the loop if filtering is successful
+                            break 
 
-                # If filtering did not produce any data, continue to the next file
                 if filtered_df.empty:
                     logger.warning(f"No data left after filtering for file ID {file_id}.")
                     continue
 
-                # Generate graphs based on filtered data
                 graphs = Graph.objects.filter(csv_data=csv_data).order_by('id')
                 if not graphs:
                     logger.warning(f"No graphs found for file ID {file_id}")
@@ -593,7 +555,6 @@ def filter_graph_by_chronology(request):
                         exec_globals = {'pd': pd, 'plt': plt, 'io': io, 'base64': base64, 'df': filtered_df}
                         exec_locals = {}
 
-                        # Execute the code to generate the graph
                         exec(graph_code, exec_globals, exec_locals)
                         image_base64 = exec_locals.get('image_base64', '')
 
@@ -632,20 +593,17 @@ def get_date_columns(request):
         try:
             date_columns = set()
             
-            # Get all CsvData records
             csv_data_records = CsvData.objects.all()
             
             for csv_data in csv_data_records:
                 file = csv_data.file
                 file_path = default_storage.path(file.name)
                 
-                # Check if the file exists, if not, create it from storage
                 if not os.path.exists(file_path):
                     with default_storage.open(file.name, 'rb') as src_file:
                         with open(file_path, 'wb') as dst_file:
                             dst_file.write(src_file.read())
                 
-                # Read the file based on its extension
                 if file.name.lower().endswith('.csv'):
                     df = pd.read_csv(file_path)
                 elif file.name.lower().endswith(('.xls', '.xlsx')):
@@ -653,15 +611,11 @@ def get_date_columns(request):
                 else:
                     return HttpResponseBadRequest("Unsupported file format")
                 
-                # Clean up column names
                 df.columns = [col.strip() for col in df.columns]
 
-                # Check each column to see if it contains date values
                 for column in df.columns:
                     try:
-                        # Convert column to datetime with infer_datetime_format=True
                         converted_dates = pd.to_datetime(df[column], infer_datetime_format=True, errors='coerce')
-                        # If the column contains non-NaT values, it is considered a date column
                         if converted_dates.notna().any() and not pd.api.types.is_numeric_dtype(df[column]):
                             date_columns.add(column)
                     except (ValueError, TypeError):
@@ -679,7 +633,6 @@ def get_date_columns(request):
 @csrf_exempt
 def show_session_key(request):
     if request.method == 'GET':
-        # Get the current session key
         session_key = request.session.session_key
         return JsonResponse({'session_key': session_key})
     else:

@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { MatDialog } from '@angular/material/dialog'; // Import MatDialog
+import { MatDialog } from '@angular/material/dialog'; 
 import { PopupService } from '../../popup.service';
 import { ChronologyFilterComponent } from '../chronology-filter/chronology-filter.component';
 
@@ -10,20 +10,18 @@ import { ChronologyFilterComponent } from '../chronology-filter/chronology-filte
 })
 export class FiltersSelectionComponent {
 
-  @Input() selectedFile: File | null = null; // Input to receive the selected file from the parent component
-  noDataMessage: string = ''; // Add this property for error messages
+  @Input() selectedFile: File | null = null; 
+  noDataMessage: string = '';
 
-  constructor(private popupService: PopupService, private dialog: MatDialog) {} // Inject MatDialog
+  constructor(private popupService: PopupService, private dialog: MatDialog) {} 
 
   openSegmentFilter(): void {
     this.popupService.openSegmentsFilter();
   }
   openChronologyFilter(): void {
-    // Open the Chronology Filter Modal
     this.dialog.open(ChronologyFilterComponent, {
       width: '600px'
     }).afterClosed().subscribe(result => {
-      // Handle result if needed
       console.log('Chronology filter dialog closed with result:', result);
     });
   }
