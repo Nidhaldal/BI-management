@@ -1,103 +1,57 @@
 # BI Management Platform
 
-A full-stack Business Intelligence (BI) web application with interactive dashboards, workflow configuration, and data visualization. Built with Django for the backend and Angular for the frontend.
-
----
+A full-stack Business Intelligence (BI) web application with interactive dashboards, workflow configuration, and data visualization.
 
 ## 🚀 Features
-
 - Interactive dashboards with advanced filtering
+-Low code
 - Workflow configuration using low-code modules
 - Role-based access control
 - Secure user management
 - REST APIs for backend-frontend communication
 - Scalable architecture for future expansion
 
----
-
 ## 🛠 Tech Stack
 
-**Backend:**  
-- Python 3  
-- Django  
-- Django REST Framework  
+### Backend
+- Python
+- Django & Django REST Framework
+- SQL Databases (SQLite/PostgreSQL)
 
-**Frontend:**  
-- Angular  
-- TypeScript  
-- HTML / CSS  
+### Frontend
+- Angular
+- TypeScript
+- HTML / CSS
 
-**Databases & Tools:**  
-- SQL (SQLite/PostgreSQL)  
-- Power BI (optional for reporting)  
-- WebSockets (if used for live updates)
+### Reporting & BI Tools
+- Power BI 
 
----
-
-## 📁 Project Structure
+## 🏗 Project Structure
 
 BI-management/
-│
-├── backend/ # Django backend
-│ ├── accounts/ # User authentication
-│ ├── core/ # Main business logic
-│ ├── datasets/ # Sample datasets (ignored in Git)
-│ ├── media/ # Media files (ignored in Git)
-│ └── ... # Other backend modules
-│
-├── frontend/ # Angular frontend
-│ ├── src/ # Angular app source code
-│ ├── node_modules/ # Node dependencies (ignored in Git)
-│ └── ...
-│
-├── .gitignore
-└── README.md 
-
----
+- backend/          # Django backend
+- frontend/         # Angular frontend
+- .gitignore
+- README.md
 
 ## ▶️ Getting Started
 
-### Backend
+Backend:
+1. Create virtual environment
+2. Install dependencies
+3. Run Django server
 
-1. Create and activate a virtual environment:
+Frontend:
+1. Install dependencies
+2. Start Angular server
 
-```bash
-cd backend
-python -m venv venv
-venv\Scripts\activate      # Windows
-source venv/bin/activate   # macOS/Linux
-Install dependencies:
+## 🔐 Environment Variables
 
-pip install -r requirements.txt
+Sensitive data is stored in `.env` files and ignored by Git.
 
+## 👨‍💻 Author
 
-Run migrations and start the server:
-
-python manage.py migrate
-python manage.py runserver
-
-Frontend
-
-Navigate to the frontend folder and install dependencies:
-
-cd frontend
-npm install
-
-
-Start the Angular development server:
-
-ng serve
-
-
-The frontend will be running at http://localhost:4200/.
-
-
-Author
-
-Nidhal Dalhoumi
-
-GitHub: https://github.com/Nidhaldal
-
-LinkedIn: https://www.linkedin.com/in/nidhal-dalhoumi-1b4a721a6/
-
+**Nidhal Dalhoumi**  
+GitHub: https://github.com/Nidhaldal  
+LinkedIn: https://www.linkedin.com/in/nidhal-dalhoumi-1b4a721a6/  
 Email: nidhal.dalhoumi@esprit.tn
